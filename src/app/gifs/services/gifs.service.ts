@@ -8,6 +8,7 @@ export class GifsService {
   private apiUrl: string = 'https://api.giphy.com/v1/gifs/search';
   private apiKey: string = 'cijbfEcv2oZa6GLWYhadfi3xLJCrDk5m';
   private _historial: string[] = [];
+  resultados: any[] = [];
 
   get historial() {
     return [...this._historial];
@@ -24,12 +25,13 @@ export class GifsService {
       this._historial.unshift(query);
       this._historial = this._historial.splice(0, 10);
     }
+    let url = this.apiUrl + '?api_key=' + this.apiKey + '&limit=10&q=' + query;
+    console.log(url);
 
-    this.http.get(this.apiUrl + '?api_key=' + this.apiKey + '&limits=10&q=' + query)
-      // this.http.get('https://api.giphy.com/v1/gifs/search?api_key=cijbfEcv2oZa6GLWYhadfi3xLJCrDk5m&q=dbz&limit=10')
-      .subscribe(res => {
-        //this.http.get(this.apiUrl + '?api_key=' + this.apiKey + '&limits=10&q=' + query).subscribe(res => {
+    this.http.get(url)
+      .subscribe((res: any) => {
         console.log('res', res);
+        this.resultados = res.data;
       });
 
     console.log(this._historial);
